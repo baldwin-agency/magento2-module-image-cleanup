@@ -1,0 +1,53 @@
+{
+    "name": "baldwin/magento2-module-image-cleanup",
+    "description": "Magento 2 module which can cleanup old image files that are no longer being used",
+    "license": "MIT",
+    "type": "magento2-module",
+    "authors": [
+        {
+            "name": "Pieter Hoste",
+            "email": "pieter@baldwin.be",
+            "role": "Problem Solver"
+        }
+    ],
+    "require": {
+        "php": "~7.3.0 || ~7.4.0 || ~8.1.0",
+        "magento/framework": "^102.0.4 || ^103.0",
+        "magento/module-catalog": "^103.0.4 || ^104.0",
+        "magento/module-store": "^101.0.4",
+        "magento/module-theme": "^101.0.4",
+        "symfony/console": "^4.0 || ^5.0"
+    },
+    "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.7",
+        "ergebnis/composer-normalize": "^2.17"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Baldwin\\ImageCleanup\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
+            "ergebnis/composer-normalize": true,
+            "magento/composer-dependency-version-audit-plugin": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "bamarni-bin": {
+            "bin-links": false,
+            "forward-command": true
+        }
+    }
+}

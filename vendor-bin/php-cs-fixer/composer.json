@@ -1,0 +1,8 @@
+{
+    "require": {
+        "friendsofphp/php-cs-fixer": "^3.4"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

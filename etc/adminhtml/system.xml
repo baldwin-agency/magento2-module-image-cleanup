@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="catalog">
+            <group id="baldwin_imagecleanup_settings" translate="label" sortOrder="325" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Product Image Cleanup Settings</label>
+                <field id="alternative_extensions" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>List of dynamically generated image file extensions</label>
+                    <comment><![CDATA[Comma-separated, no dots are needed. For example: <i>webp,avif</i><br>
+The module will not remove dynamically generated files with these alternative extensions in case the original uploaded image is still being used]]></comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

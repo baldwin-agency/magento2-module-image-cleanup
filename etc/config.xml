@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <catalog>
+            <baldwin_imagecleanup_settings>
+                <alternative_extensions>webp,avif</alternative_extensions>
+            </baldwin_imagecleanup_settings>
+        </catalog>
+    </default>
+</config>

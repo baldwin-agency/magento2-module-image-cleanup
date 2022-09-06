@@ -1,0 +1,4 @@
+/.php-cs-fixer.cache
+/auth.json
+/vendor-bin/*/vendor
+/vendor/

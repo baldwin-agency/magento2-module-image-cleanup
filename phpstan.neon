@@ -1,0 +1,10 @@
+parameters:
+    level: max
+    inferPrivatePropertyTypeFromConstructor: true
+    checkDynamicProperties: true
+    checkImplicitMixed: false # TODO: change to true if we feel like we need another challenge
+    paths:
+        - .
+    excludePaths:
+        - vendor/*
+        - vendor-bin/*

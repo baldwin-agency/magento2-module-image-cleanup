@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="baldwin_imagecleanup_console_command_removeunusedcachehashdirectories" xsi:type="object">Baldwin\ImageCleanup\Console\Command\RemoveUnusedCacheHashDirectories</item>
+                <item name="baldwin_imagecleanup_console_command_removeunusedimagefiles" xsi:type="object">Baldwin\ImageCleanup\Console\Command\RemoveUnusedImageFiles</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Baldwin\ImageCleanup\Log\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/baldwin-imagecleanup.log</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Baldwin\ImageCleanup\Log\Logger" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">Baldwin::ImageCleanup</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Baldwin\ImageCleanup\Log\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Baldwin\ImageCleanup\Logger\Logger">
+        <arguments>
+            <argument name="logger" xsi:type="object">Baldwin\ImageCleanup\Log\Logger</argument>
+        </arguments>
+    </type>
+</config>
