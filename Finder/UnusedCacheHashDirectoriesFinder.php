@@ -13,7 +13,7 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface as ReadDirectory;
-use Magento\Framework\Filesystem\DriverInterface as FilesystemDriverInterface;
+use Magento\Framework\Filesystem\Driver\File as FilesystemFileDriver;
 use Magento\Framework\View\ConfigInterface as ViewConfig;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Model\Config\Customization as ThemeCustomizationConfig;
@@ -25,7 +25,7 @@ class UnusedCacheHashDirectoriesFinder
     private $paramsBuilder;
     private $assetImageFactory;
     private $filesystem;
-    private $filesystemDriver;
+    private $filesystemFileDriver;
     private $viewConfig;
     private $storeManager;
     private $themeCustomizationConfig;
@@ -35,7 +35,7 @@ class UnusedCacheHashDirectoriesFinder
         ParamsBuilder $paramsBuilder,
         AssetImageFactory $assetImageFactory,
         Filesystem $filesystem,
-        FilesystemDriverInterface $filesystemDriver,
+        FilesystemFileDriver $filesystemFileDriver,
         ViewConfig $viewConfig,
         StoreManagerInterface $storeManager,
         ThemeCustomizationConfig $themeCustomizationConfig,
@@ -44,7 +44,7 @@ class UnusedCacheHashDirectoriesFinder
         $this->paramsBuilder = $paramsBuilder;
         $this->assetImageFactory = $assetImageFactory;
         $this->filesystem = $filesystem;
-        $this->filesystemDriver = $filesystemDriver;
+        $this->filesystemFileDriver = $filesystemFileDriver;
         $this->viewConfig = $viewConfig;
         $this->storeManager = $storeManager;
         $this->themeCustomizationConfig = $themeCustomizationConfig;
@@ -65,7 +65,7 @@ class UnusedCacheHashDirectoriesFinder
         $unusedDirectories = array_diff($allDirectories, $usedDirectories);
 
         $unusedDirectories = array_map(function (string $directory) use ($mediaDirectory): string {
-            $absolutePath = $this->filesystemDriver->getRealPath($mediaDirectory->getAbsolutePath($directory));
+            $absolutePath = $this->filesystemFileDriver->getRealPath($mediaDirectory->getAbsolutePath($directory));
 
             if (!is_string($absolutePath)) {
                 throw new FileSystemException(
