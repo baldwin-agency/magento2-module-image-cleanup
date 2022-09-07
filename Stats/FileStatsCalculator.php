@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Baldwin\ImageCleanup\Stats;
 
-use Magento\Framework\Filesystem\DriverInterface as FilesystemDriverInterface;
+use Magento\Framework\Filesystem\Driver\File as FilesystemFileDriver;
 
 class FileStatsCalculator
 {
-    private $filesystemDriver;
+    private $filesystemFileDriver;
 
     /** @var bool */
     private $skipCalculation = false;
@@ -18,9 +18,9 @@ class FileStatsCalculator
     private $totalSizeInBytes = 0;
 
     public function __construct(
-        FilesystemDriverInterface $filesystemDriver
+        FilesystemFileDriver $filesystemFileDriver
     ) {
-        $this->filesystemDriver = $filesystemDriver;
+        $this->filesystemFileDriver = $filesystemFileDriver;
     }
 
     public function resetStats(): void
@@ -35,7 +35,7 @@ class FileStatsCalculator
             return;
         }
 
-        if ($this->filesystemDriver->isDirectory($path)) {
+        if ($this->filesystemFileDriver->isDirectory($path)) {
             $fileIterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)
             );
@@ -47,7 +47,7 @@ class FileStatsCalculator
                     $this->totalSizeInBytes += $file->getSize();
                 }
             }
-        } elseif ($this->filesystemDriver->isFile($path)) {
+        } elseif ($this->filesystemFileDriver->isFile($path)) {
             $file = new \SplFileInfo($path);
 
             ++$this->numberOfFiles;

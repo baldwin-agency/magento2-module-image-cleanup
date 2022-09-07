@@ -9,13 +9,13 @@ use Baldwin\ImageCleanup\Stats\FileStatsCalculator;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\DriverInterface as FilesystemDriverInterface;
+use Magento\Framework\Filesystem\Driver\File as FilesystemFileDriver;
 
 class MediaDeleter
 {
     private $fileStatsCalculator;
     private $filesystem;
-    private $filesystemDriver;
+    private $filesystemFileDriver;
     private $logger;
 
     /** @var array<string> */
@@ -26,12 +26,12 @@ class MediaDeleter
     public function __construct(
         FileStatsCalculator $fileStatsCalculator,
         Filesystem $filesystem,
-        FilesystemDriverInterface $filesystemDriver,
+        FilesystemFileDriver $filesystemFileDriver,
         Logger $logger
     ) {
         $this->fileStatsCalculator = $fileStatsCalculator;
         $this->filesystem = $filesystem;
-        $this->filesystemDriver = $filesystemDriver;
+        $this->filesystemFileDriver = $filesystemFileDriver;
         $this->logger = $logger;
     }
 
@@ -43,7 +43,7 @@ class MediaDeleter
         $this->resetState();
 
         $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
-        $mediaDirectoryPath = $this->filesystemDriver->getRealPath($mediaDirectory->getAbsolutePath());
+        $mediaDirectoryPath = $this->filesystemFileDriver->getRealPath($mediaDirectory->getAbsolutePath());
         if (!is_string($mediaDirectoryPath)) {
             throw new FileSystemException(
                 __('Can\'t find media directory path: "%1"', $mediaDirectory->getAbsolutePath())
