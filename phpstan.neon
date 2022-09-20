@@ -8,3 +8,18 @@ parameters:
     excludePaths:
         - vendor/*
         - vendor-bin/*
+    ignoreErrors:
+        -
+            message: "#^Casting to int something that's already int\\.$#"
+            count: 1
+            path: Finder/UnusedCacheHashDirectoriesFinder.php
+
+        -
+            message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
+            count: 1
+            path: Finder/UnusedCacheHashDirectoriesFinder.php
+
+        -
+            message: "#^Variable method call on Magento\\\\Theme\\\\Model\\\\Theme\\.$#"
+            count: 1
+            path: Finder/UnusedCacheHashDirectoriesFinder.php
