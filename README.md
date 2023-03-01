@@ -22,7 +22,7 @@ This module gives you some options to delete those lingering unused images from 
 ## Compatibility
 
 - This module should work with Magento 2.3.4 or higher
-- The module should be compatible with PHP 7.3, 7.4 and 8.1
+- The module should be compatible with PHP 7.3, 7.4, 8.1 and 8.2
 
 ## Installation
 
@@ -75,3 +75,10 @@ Sometimes, Magento tweaks how the hash gets calculated in certain newer versions
 
 This module has the option to detect such directories and can remove them together with all the files in there.
 
+## Note to self
+
+In our class `Baldwin\ImageCleanup\Finder\UnusedCacheHashDirectoriesFinder`, we borrowed some code from core Magento that was private and not easily callable. We made only very slight changes to deal with coding standards and static analysis, but it's mostly the same as the original source. These pieces of code was based on code that didn't really change since Magento 2.3.4.
+
+It's important that we check with every single new Magento version that gets released, that the code in `Magento\MediaStorage\Service\ImageResize` doesn't change in such a way that we need to adapt for our own implementation.
+
+So this is something that needs to be double checked with every new Magento release.

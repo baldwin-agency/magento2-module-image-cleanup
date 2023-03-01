@@ -124,7 +124,7 @@ class UserInteraction
         $units = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
 
         $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = floor(($bytes > 0 ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($units) - 1);
 
         $bytes /= (1 << (10 * $pow));
@@ -140,7 +140,7 @@ class UserInteraction
             $question = new ConfirmationQuestion('Continue with the deletion of these paths [y/N]? ', false);
             $questionHelper = new QuestionHelper();
 
-            if ($questionHelper->ask($input, $output, $question)) {
+            if ((bool) $questionHelper->ask($input, $output, $question)) {
                 $result = true;
                 $output->writeln('');
             }
