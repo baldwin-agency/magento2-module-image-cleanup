@@ -3,7 +3,7 @@
 ## Purpose
 
 When adding products in your webshop, eventually you'll also have to delete some of those products.
-But Magento doesn't remove images associated with the products that you delete.  
+But sometimes Magento doesn't remove images associated with the products that you delete.  
 So you'll have to manually delete them from time to time from disk, which is hard to do manually.
 This module gives you some options to delete those lingering unused images from the disk so you can recover some diskspace on your server.
 
@@ -13,10 +13,11 @@ This module gives you some options to delete those lingering unused images from 
 - It can do the same for the resized (cached) versions of those images
 - It tries to not delete dynamically generated images files (like `webp` of `avif` files) if the original file is still being used, see [configuration](#configuration)
 - It can detect entire unused resized (cached) directories that are no longer valid and remove them with all the files in there, see [below](#documentation-about-resizedcached-directories)
+- It can detect and remove obsolete values in the `catalog_product_entity_media_gallery` database table
 
 ## Watch out
 
-- The module will always first output what it will delete, make sure you check the entire list before confirming, so that you aren't removing files you don't want to remove. Do **not** test this module on a production environment first before you fully understand what it will do!
+- The module will always first output what it will delete, make sure you check the entire list before confirming, so that you aren't removing files you don't want to remove. Do **not** _test_ this module on a production environment first before you fully understand what it will do!
 - This module hasn't been tested when your Magento shop is configured to store image files in the database, your mileage may vary when you use that way of working. Feel free to open issues in case any occur, and we'll see if we can fix something...
 
 ## Compatibility
@@ -42,12 +43,13 @@ bin/magento setup:upgrade
 
 ## Usage
 
-There are 2 command line commands you can use execute:
+There are 3 command line commands you can use execute:
 
 - `bin/magento catalog:images:remove-unused-hash-directories`
 - `bin/magento catalog:images:remove-unused-files`
+- `bin/magento catalog:images:remove-obsolete-db-entries`
 
-Both commands have some extra options:
+There are some extra options for some of these commands:
 
 ```
       --no-stats        Skip calculating and outputting stats (filesizes, number of files, ...), this can speed up the command in case it runs slowly.
@@ -56,9 +58,10 @@ Both commands have some extra options:
 
 The `-n` option can be used if you want to setup a cronjob to regularly call these cleanup commands, it will not ask for confirmation before removing files, and will just assume you said 'yes, go ahead' (which can be dangerous!)
 
-The module will output all the paths it deleted in a log file `{magento-project}/var/log/baldwin-imagecleanup.log` so you can inspect it later in case you want to figure out why a file got removed.
+The module will output all the things it deleted in a log file `{magento-project}/var/log/baldwin-imagecleanup.log` so you can inspect it later in case you want to figure out why something got removed.
 
-Performance-wise, it's adviced to first run `catalog:images:remove-unused-hash-directories` before `catalog:images:remove-unused-files` because the first one could already remove a bunch of files that the second one might also find.
+Performance-wise, it's adviced to first run `catalog:images:remove-unused-hash-directories` before `catalog:images:remove-unused-files` because the first one could already remove a bunch of files that the second one might also find.  
+Also running `bin/magento catalog:images:remove-obsolete-db-entries` might expose more files that `catalog:images:remove-unused-files` can delete. So it's probably better to run that one earlier as well.
 
 ## Configuration
 
@@ -77,8 +80,8 @@ This module has the option to detect such directories and can remove them togeth
 
 ## Note to self
 
-In our class `Baldwin\ImageCleanup\Finder\UnusedCacheHashDirectoriesFinder`, we borrowed some code from core Magento that was private and not easily callable. We made only very slight changes to deal with coding standards and static analysis, but it's mostly the same as the original source. These pieces of code was based on code that didn't really change since Magento 2.3.4.
+In our class `Baldwin\ImageCleanup\Finder\UnusedCacheHashDirectoriesFinder`, we borrowed some code from core Magento that was private and not easily callable. We made only very slight changes to deal with coding standards and static analysis, but it's mostly the same as the original source. These pieces of code were based on code that didn't really change since Magento 2.3.4.
 
-It's important that we check with every single new Magento version that gets released, that the code in `Magento\MediaStorage\Service\ImageResize` doesn't change in such a way that we need to adapt for our own implementation.
+It's important that we check with every single new Magento version that gets released, that the code in `Magento\MediaStorage\Service\ImageResize` doesn't change in such a way that we need to adapt our own implementation.
 
 So this is something that needs to be double checked with every new Magento release.
