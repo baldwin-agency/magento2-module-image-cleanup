@@ -47,18 +47,22 @@ class ObsoleteDatabaseEntriesFinder
         $mediaGalleryAttr = $this->attributeRepository->get(ProductModel::ENTITY, 'media_gallery');
         $mediaGalleryId = $mediaGalleryAttr->getAttributeId();
 
-        $fetchQuery = sprintf(
-            <<<'QUERY'
-SELECT cpemg.value_id, cpemg.value FROM %s cpemg
-LEFT JOIN %s cpemgvte
-ON cpemg.value_id = cpemgvte.value_id
-WHERE cpemgvte.value_id IS NULL AND cpemg.media_type = 'image' AND cpemg.attribute_id = :media_gallery_id
-QUERY,
-            $this->resource->getTableName(GalleryResourceModel::GALLERY_TABLE),
-            $this->resource->getTableName(GalleryResourceModel::GALLERY_VALUE_TO_ENTITY_TABLE)
-        );
+        $entriesQuery = $this->resource->getConnection()->select()
+            ->from(
+                ['cpemg' => $this->resource->getTableName(GalleryResourceModel::GALLERY_TABLE)],
+                ['value_id', 'value']
+            )
+            ->joinLeft(
+                ['cpemgvte' => $this->resource->getTableName(GalleryResourceModel::GALLERY_VALUE_TO_ENTITY_TABLE)],
+                'cpemg.value_id = cpemgvte.value_id',
+                ''
+            )
+            ->where(
+                'cpemgvte.value_id IS NULL AND cpemg.media_type = "image" AND cpemg.attribute_id = :media_gallery_id'
+            )
+        ;
 
-        $entries = $this->resource->getConnection()->fetchAll($fetchQuery, ['media_gallery_id' => $mediaGalleryId]);
+        $entries = $this->resource->getConnection()->fetchAll($entriesQuery, ['media_gallery_id' => $mediaGalleryId]);
 
         foreach ($entries as $entry) {
             $values[] = new GalleryValue((int) $entry['value_id'], $entry['value']);
