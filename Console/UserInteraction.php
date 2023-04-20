@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baldwin\ImageCleanup\Console;
 
+use Baldwin\ImageCleanup\DataObject\GalleryValue;
 use Baldwin\ImageCleanup\Logger\Logger;
 use Baldwin\ImageCleanup\Stats\FileStatsCalculator;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -55,6 +56,31 @@ class UserInteraction
     }
 
     /**
+     * @param array<string> $values
+     */
+    public function showDbValuesToDeleteAndAskForConfirmation(
+        array $values,
+        string $dbTable,
+        InputInterface $input,
+        OutputInterface $output
+    ): bool {
+        $output->writeln('');
+
+        if ($values === []) {
+            $output->writeln('<info>No db values found to cleanup, all is good!</info>');
+            $this->logger->logNoActionTaken();
+
+            return false;
+        }
+
+        if ($input->isInteractive()) {
+            $this->displayDbValues($values, $dbTable, $output);
+        }
+
+        return $this->askForConfirmation($input, $output);
+    }
+
+    /**
      * @param array<string> $deletedPaths
      * @param array<string> $skippedPaths
      */
@@ -86,6 +112,23 @@ class UserInteraction
     }
 
     /**
+     * @param array<GalleryValue> $deletedValues
+     */
+    public function showFinalDbInfo(
+        array $deletedValues,
+        int $numberOfValuesDeleted,
+        string $dbTable,
+        OutputInterface $output
+    ): void {
+        if ($deletedValues !== []) {
+            $output->writeln(sprintf("<info>Deleted these values:\n- %s</info>", implode("\n- ", $deletedValues)));
+            $output->writeln('');
+
+            $this->logger->logFinalDbSummary($numberOfValuesDeleted, $dbTable);
+        }
+    }
+
+    /**
      * @param array<string> $paths
      */
     private function displayPaths(array $paths, OutputInterface $output): void
@@ -96,6 +139,22 @@ class UserInteraction
 
         foreach ($paths as $path) {
             $output->writeln(sprintf('<question>- %s</question>', $path));
+        }
+        $output->writeln('');
+    }
+
+    /**
+     * @param array<string> $values
+     */
+    private function displayDbValues(array $values, string $dbTable, OutputInterface $output): void
+    {
+        $output->writeln(sprintf(
+            '<question>We found the following values to delete in the database table %s:</question>',
+            $dbTable
+        ));
+
+        foreach ($values as $value) {
+            $output->writeln(sprintf('<question>- %s</question>', $value));
         }
         $output->writeln('');
     }
@@ -137,7 +196,7 @@ class UserInteraction
         $result = false;
 
         if ($input->isInteractive()) {
-            $question = new ConfirmationQuestion('Continue with the deletion of these paths [y/N]? ', false);
+            $question = new ConfirmationQuestion('Continue with the deletion of these [y/N]? ', false);
             $questionHelper = new QuestionHelper();
 
             if ((bool) $questionHelper->ask($input, $output, $question)) {
