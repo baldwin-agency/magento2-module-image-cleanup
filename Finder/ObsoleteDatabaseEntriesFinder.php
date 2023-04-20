@@ -51,16 +51,14 @@ class ObsoleteDatabaseEntriesFinder
             <<<'QUERY'
 SELECT cpemg.value_id, cpemg.value FROM %s cpemg
 LEFT JOIN %s cpemgvte
-ON cpemg.value_id = cpemgvte.value_id AND attribute_id = :media_gallery_id
-WHERE cpemgvte.value_id IS NULL AND cpemg.media_type = 'image'
+ON cpemg.value_id = cpemgvte.value_id
+WHERE cpemgvte.value_id IS NULL AND cpemg.media_type = 'image' AND cpemg.attribute_id = :media_gallery_id
 QUERY,
             $this->resource->getTableName(GalleryResourceModel::GALLERY_TABLE),
             $this->resource->getTableName(GalleryResourceModel::GALLERY_VALUE_TO_ENTITY_TABLE)
         );
 
         $entries = $this->resource->getConnection()->fetchAll($fetchQuery, ['media_gallery_id' => $mediaGalleryId]);
-
-        echo count($entries); die();
 
         foreach ($entries as $entry) {
             $values[] = new GalleryValue((int) $entry['value_id'], $entry['value']);
