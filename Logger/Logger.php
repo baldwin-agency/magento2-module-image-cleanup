@@ -34,7 +34,7 @@ class Logger
     public function logFinalSummary(int $numberOfFilesRemoved, string $formattedBytesRemoved): void
     {
         $this->logger->info(sprintf(
-            'Removed %d files in total which cleared up %s of diskspace',
+            '-- Summary: removed %d files in total which cleared up %s of diskspace',
             $numberOfFilesRemoved,
             $formattedBytesRemoved
         ));
@@ -43,7 +43,7 @@ class Logger
     public function logFinalDbSummary(int $numberOfDbRowsRemoved, string $dbTable): void
     {
         $this->logger->info(sprintf(
-            'Removed %d rows in the %s database table',
+            '-- Summary: removed %d rows in the %s database table',
             $numberOfDbRowsRemoved,
             $dbTable
         ));
