@@ -5,12 +5,22 @@ declare(strict_types=1);
 namespace Baldwin\ImageCleanup\Finder;
 
 use Baldwin\ImageCleanup\DataObject\GalleryValue;
+use Magento\Catalog\Model\Product as ProductModel;
+use Magento\Catalog\Model\ResourceModel\Product\Gallery as GalleryResourceModel;
+use Magento\Eav\Api\AttributeRepositoryInterface;
+use Magento\Framework\App\ResourceConnection;
 
 class ObsoleteDatabaseEntriesFinder
 {
-    public function __construct()
-    {
-        // TODO
+    private $resource;
+    private $attributeRepository;
+
+    public function __construct(
+        ResourceConnection $resource,
+        AttributeRepositoryInterface $attributeRepository
+    ) {
+        $this->resource = $resource;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -18,6 +28,8 @@ class ObsoleteDatabaseEntriesFinder
      */
     public function find(): array
     {
+        $values = [];
+
         // SQL queries that will find obsolete entries:
         //
         // 1) SELECT * FROM catalog_product_entity_media_gallery
@@ -32,9 +44,28 @@ class ObsoleteDatabaseEntriesFinder
         //  218043 entries in catalog_product_entity_media_gallery and
         //  101860 entries in catalog_product_entity_media_gallery_value_to_entity
 
-        // TODO: add extra filter on attribute_id being id from 'media_gallery'
+        $mediaGalleryAttr = $this->attributeRepository->get(ProductModel::ENTITY, 'media_gallery');
+        $mediaGalleryId = $mediaGalleryAttr->getAttributeId();
 
-        // TODO
-        return [];
+        $fetchQuery = sprintf(
+            <<<'QUERY'
+SELECT cpemg.value_id, cpemg.value FROM %s cpemg
+LEFT JOIN %s cpemgvte
+ON cpemg.value_id = cpemgvte.value_id AND attribute_id = :media_gallery_id
+WHERE cpemgvte.value_id IS NULL AND cpemg.media_type = 'image'
+QUERY,
+            $this->resource->getTableName(GalleryResourceModel::GALLERY_TABLE),
+            $this->resource->getTableName(GalleryResourceModel::GALLERY_VALUE_TO_ENTITY_TABLE)
+        );
+
+        $entries = $this->resource->getConnection()->fetchAll($fetchQuery, ['media_gallery_id' => $mediaGalleryId]);
+
+        echo count($entries); die();
+
+        foreach ($entries as $entry) {
+            $values[] = new GalleryValue((int) $entry['value_id'], $entry['value']);
+        }
+
+        return $values;
     }
 }
