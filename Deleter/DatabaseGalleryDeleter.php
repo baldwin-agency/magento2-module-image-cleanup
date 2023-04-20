@@ -7,17 +7,24 @@ namespace Baldwin\ImageCleanup\Deleter;
 use Baldwin\ImageCleanup\DataObject\GalleryValue;
 use Baldwin\ImageCleanup\Logger\Logger;
 use Magento\Catalog\Model\ResourceModel\Product\Gallery as GalleryResourceModel;
+use Magento\Framework\App\ResourceConnection;
 
 class DatabaseGalleryDeleter
 {
+    private $resource;
     private $logger;
 
-    /** @var array<GalleryValue> */
-    private $deletedValues = [];
+    /** @var array<string> */
+    private $deletedValueIds = [];
+
+    /** @var int */
+    private $deletedValuesCount = 0;
 
     public function __construct(
+        ResourceConnection $resource,
         Logger $logger
     ) {
+        $this->resource = $resource;
         $this->logger = $logger;
     }
 
@@ -28,30 +35,48 @@ class DatabaseGalleryDeleter
     {
         $this->resetState();
 
-        // TODO !
+        $valueIds = array_map(
+            function (GalleryValue $value) {
+                return $value->getValueId();
+            },
+            $values
+        );
 
-        foreach ($values as $value) {
-            $this->logger->logDbRowRemoval((string) $value, GalleryResourceModel::GALLERY_TABLE);
+        $valueIdChunks = array_chunk($valueIds, 5000);
+        foreach ($valueIdChunks as $valueIdChunk) {
+            $deleteResult = $this->resource->getConnection()->delete(
+                $this->resource->getTableName(GalleryResourceModel::GALLERY_TABLE),
+                [
+                    $this->resource->getConnection()->quoteInto('value_id IN (?)', $valueIdChunk),
+                ]
+            );
+
+            $this->deletedValuesCount += $deleteResult;
+            foreach ($valueIdChunk as $valueId) {
+                $prefixedValueId = sprintf('valueId: %d', $valueId);
+
+                $this->deletedValueIds[] = $prefixedValueId;
+                $this->logger->logDbRowRemoval($prefixedValueId, GalleryResourceModel::GALLERY_TABLE);
+            }
         }
-
-        $this->deletedValues = $values;
     }
 
     private function resetState(): void
     {
-        $this->deletedValues = [];
+        $this->deletedValueIds = [];
+        $this->deletedValuesCount = 0;
     }
 
     /**
-     * @return array<GalleryValue>
+     * @return array<string>
      */
     public function getDeletedValues(): array
     {
-        return $this->deletedValues;
+        return $this->deletedValueIds;
     }
 
     public function getNumberOfValuesDeleted(): int
     {
-        return count($this->deletedValues);
+        return $this->deletedValuesCount;
     }
 }

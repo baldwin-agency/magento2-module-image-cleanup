@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Baldwin\ImageCleanup\Console;
 
-use Baldwin\ImageCleanup\DataObject\GalleryValue;
 use Baldwin\ImageCleanup\Logger\Logger;
 use Baldwin\ImageCleanup\Stats\FileStatsCalculator;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -112,7 +111,7 @@ class UserInteraction
     }
 
     /**
-     * @param array<GalleryValue> $deletedValues
+     * @param array<string> $deletedValues
      */
     public function showFinalDbInfo(
         array $deletedValues,
@@ -121,7 +120,11 @@ class UserInteraction
         OutputInterface $output
     ): void {
         if ($deletedValues !== []) {
-            $output->writeln(sprintf("<info>Deleted these values:\n- %s</info>", implode("\n- ", $deletedValues)));
+            $output->writeln(sprintf(
+                "<info>- %s\n\nDeleted the above %d values</info>",
+                implode("\n- ", $deletedValues),
+                count($deletedValues)
+            ));
             $output->writeln('');
 
             $this->logger->logFinalDbSummary($numberOfValuesDeleted, $dbTable);

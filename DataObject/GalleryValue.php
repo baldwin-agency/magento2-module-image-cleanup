@@ -15,6 +15,11 @@ class GalleryValue
         $this->value   = $value;
     }
 
+    public function getValueId(): int
+    {
+        return $this->valueId;
+    }
+
     public function __toString()
     {
         return sprintf(
