@@ -66,7 +66,8 @@ class UnusedFilesFinder
      */
     private function getFilenamesFromDb(): array
     {
-        // MAYBE TODO: get only gallery values that are actually linked to an existing entity ?
+        // we don't check here if the gallery entries are assigned to an existing entity
+        // we have the catalog:images:remove-obsolete-db-entries command to get rid of those obsolete entries first
 
         $connection = $this->resource->getConnection();
         $select = $connection->select()
