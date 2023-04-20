@@ -18,7 +18,7 @@ class GalleryValue
     public function __toString()
     {
         return sprintf(
-            '[%s] %s',
+            '[valueId %s] %s',
             $this->valueId,
             $this->value
         );

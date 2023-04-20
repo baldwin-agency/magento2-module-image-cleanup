@@ -148,15 +148,16 @@ class UserInteraction
      */
     private function displayDbValues(array $values, string $dbTable, OutputInterface $output): void
     {
-        $output->writeln(sprintf(
-            '<question>We found the following values to delete in the database table %s:</question>',
-            $dbTable
-        ));
-
         foreach ($values as $value) {
             $output->writeln(sprintf('<question>- %s</question>', $value));
         }
+
         $output->writeln('');
+        $output->writeln(sprintf(
+            '<question>We found the above %d values to delete in the database table %s:</question>',
+            count($values),
+            $dbTable
+        ));
     }
 
     /**
