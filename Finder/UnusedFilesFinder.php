@@ -103,6 +103,7 @@ class UnusedFilesFinder
         $mediaDirectoryPath = $mediaDirectory->getAbsolutePath();
 
         $productImageDirectories = $this->getProductImageDirectories($mediaDirectory);
+        $this->progressIndicator->setMax(count($productImageDirectories));
 
         foreach ($productImageDirectories as $productImageDir) {
             $fileIterator = new \RecursiveIteratorIterator(

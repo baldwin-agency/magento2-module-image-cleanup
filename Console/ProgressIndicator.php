@@ -28,6 +28,11 @@ class ProgressIndicator
         $this->progressBar->start();
     }
 
+    public function setMax(int $max): void
+    {
+        $this->progressBar->start($max);
+    }
+
     public function advance(): void
     {
         $this->progressBar->advance();
