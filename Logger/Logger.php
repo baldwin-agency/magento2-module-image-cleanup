@@ -21,6 +21,11 @@ class Logger
         $this->logger->info(sprintf('Removed path "%s"', $path));
     }
 
+    public function logDbRowRemoval(string $rowRepresentation, string $dbTable): void
+    {
+        $this->logger->info(sprintf('Removed db value "%s" from table %s', $rowRepresentation, $dbTable));
+    }
+
     public function logNoActionTaken(): void
     {
         $this->logger->info('Nothing found to cleanup, all is good!');
@@ -29,9 +34,18 @@ class Logger
     public function logFinalSummary(int $numberOfFilesRemoved, string $formattedBytesRemoved): void
     {
         $this->logger->info(sprintf(
-            'Removed %d files in total which cleared up %s of diskspace',
+            '-- Summary: removed %d files in total which cleared up %s of diskspace',
             $numberOfFilesRemoved,
             $formattedBytesRemoved
+        ));
+    }
+
+    public function logFinalDbSummary(int $numberOfDbRowsRemoved, string $dbTable): void
+    {
+        $this->logger->info(sprintf(
+            '-- Summary: removed %d rows in the %s database table',
+            $numberOfDbRowsRemoved,
+            $dbTable
         ));
     }
 }

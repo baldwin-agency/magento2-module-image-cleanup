@@ -10,7 +10,7 @@ check: checkquality checkstyle
 
 .PHONY: checkstyle
 checkstyle:
-	PHP_CS_FIXER_IGNORE_ENV=1 vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff --stop-on-violation --allow-risky=yes
+	vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff --stop-on-violation --allow-risky=yes
 	vendor-bin/phpcs/vendor/bin/phpcs -s --standard=Magento2 --exclude=Magento2.Commenting.ClassPropertyPHPDocFormatting,Magento2.Annotation.MethodAnnotationStructure,Magento2.Annotation.MethodArguments --ignore=./vendor/,./vendor-bin/ .
 	vendor-bin/phpcs/vendor/bin/phpcs -s --standard=PHPCompatibility --runtime-set testVersion 7.3- --ignore=./vendor/,./vendor-bin/ .
 	vendor/bin/composer normalize --dry-run

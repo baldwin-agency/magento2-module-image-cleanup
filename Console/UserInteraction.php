@@ -55,6 +55,31 @@ class UserInteraction
     }
 
     /**
+     * @param array<string> $values
+     */
+    public function showDbValuesToDeleteAndAskForConfirmation(
+        array $values,
+        string $dbTable,
+        InputInterface $input,
+        OutputInterface $output
+    ): bool {
+        $output->writeln('');
+
+        if ($values === []) {
+            $output->writeln('<info>No db values found to cleanup, all is good!</info>');
+            $this->logger->logNoActionTaken();
+
+            return false;
+        }
+
+        if ($input->isInteractive()) {
+            $this->displayDbValues($values, $dbTable, $output);
+        }
+
+        return $this->askForConfirmation($input, $output);
+    }
+
+    /**
      * @param array<string> $deletedPaths
      * @param array<string> $skippedPaths
      */
@@ -86,6 +111,27 @@ class UserInteraction
     }
 
     /**
+     * @param array<string> $deletedValues
+     */
+    public function showFinalDbInfo(
+        array $deletedValues,
+        int $numberOfValuesDeleted,
+        string $dbTable,
+        OutputInterface $output
+    ): void {
+        if ($deletedValues !== []) {
+            $output->writeln(sprintf(
+                "<info>- %s\n\nDeleted the above %d values</info>",
+                implode("\n- ", $deletedValues),
+                count($deletedValues)
+            ));
+            $output->writeln('');
+
+            $this->logger->logFinalDbSummary($numberOfValuesDeleted, $dbTable);
+        }
+    }
+
+    /**
      * @param array<string> $paths
      */
     private function displayPaths(array $paths, OutputInterface $output): void
@@ -98,6 +144,23 @@ class UserInteraction
             $output->writeln(sprintf('<question>- %s</question>', $path));
         }
         $output->writeln('');
+    }
+
+    /**
+     * @param array<string> $values
+     */
+    private function displayDbValues(array $values, string $dbTable, OutputInterface $output): void
+    {
+        foreach ($values as $value) {
+            $output->writeln(sprintf('<question>- %s</question>', $value));
+        }
+
+        $output->writeln('');
+        $output->writeln(sprintf(
+            '<question>We found the above %d values to delete in the database table %s:</question>',
+            count($values),
+            $dbTable
+        ));
     }
 
     /**
@@ -137,7 +200,7 @@ class UserInteraction
         $result = false;
 
         if ($input->isInteractive()) {
-            $question = new ConfirmationQuestion('Continue with the deletion of these paths [y/N]? ', false);
+            $question = new ConfirmationQuestion('Continue with the deletion of these [y/N]? ', false);
             $questionHelper = new QuestionHelper();
 
             if ((bool) $questionHelper->ask($input, $output, $question)) {
