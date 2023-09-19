@@ -46,9 +46,9 @@ bin/magento setup:upgrade
 
 There are 4 command line commands you can use execute:
 
+- `bin/magento catalog:images:remove-obsolete-db-entries`
 - `bin/magento catalog:images:remove-unused-hash-directories`
 - `bin/magento catalog:images:remove-unused-files`
-- `bin/magento catalog:images:remove-obsolete-db-entries`
 - `bin/magento catalog:images:remove-corrupt-resized-files`
 
 There are some extra options for some of these commands:
@@ -62,9 +62,15 @@ The `-n` option can be used if you want to setup a cronjob to regularly call the
 
 The module will output all the things it deleted in a log file `{magento-project}/var/log/baldwin-imagecleanup.log` so you can inspect it later in case you want to figure out why something got removed.
 
-Performance-wise, it's adviced to first run `catalog:images:remove-unused-hash-directories` before `catalog:images:remove-unused-files` because the first one could already remove a bunch of files that the second one might also find.  
-Also running `bin/magento catalog:images:remove-obsolete-db-entries` might expose more files that `catalog:images:remove-unused-files` can delete. So it's probably better to run that one earlier as well.  
-Also running `bin/magento catalog:images:remove-corrupt-resized-files` will work faster after already having removed unused files.
+For optimal & fastest cleanup, it's advised to run the commands in this order:
+
+1. `bin/magento catalog:images:remove-obsolete-db-entries`
+2. `bin/magento catalog:images:remove-unused-hash-directories`
+3. `bin/magento catalog:images:remove-unused-files`
+4. `bin/magento catalog:images:remove-corrupt-resized-files`
+
+If you don't run these in this order, it might mean you'll need to run some of them a second time for them to find more things to cleanup or it might mean that they'll take longer then needed.
+
 
 ## Configuration
 
