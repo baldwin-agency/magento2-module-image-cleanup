@@ -97,9 +97,6 @@ class CorruptResizedFilesFinder
         return $resizedImageDirectories;
     }
 
-    /**
-     * we only check on if filesize is 0 at the moment, but there are probably other checks we can add here one day
-     */
     private function isCorruptFile(\SplFileInfo $file): bool
     {
         $size = $file->getSize();
@@ -109,8 +106,18 @@ class CorruptResizedFilesFinder
             return false;
         }
 
-        $isEmpty = $size === 0;
+        // check if filesize is 0, if 0, file is corrupt
+        if ($size === 0) {
+            return true;
+        }
 
-        return $isEmpty;
+        // if imagesize can't be determined, we can assume the image is corrupt
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.DiscouragedWithAlternative
+        $imageSizeResult = getimagesize($file->getRealPath());
+        if ($imageSizeResult === false) {
+            return true;
+        }
+
+        return false;
     }
 }

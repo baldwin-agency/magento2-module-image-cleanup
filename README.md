@@ -14,7 +14,7 @@ This module gives you some options to delete those lingering unused images from 
 - It tries to not delete dynamically generated images files (like `webp` of `avif` files) if the original file is still being used, see [configuration](#configuration)
 - It can detect entire unused resized (cached) directories that are no longer valid and remove them with all the files in there, see [below](#documentation-about-resizedcached-directories)
 - It can detect and remove obsolete values in the `catalog_product_entity_media_gallery` database table
-- It can find resized product image files that are corrupt and remove them (currently corrupt only means having 0 bytes)
+- It can find resized product image files that are corrupt and remove them
 
 ## Watch out
 
