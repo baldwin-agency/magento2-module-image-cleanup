@@ -3,6 +3,7 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
+                <item name="baldwin_imagecleanup_console_command_removecorruptresizedfiles" xsi:type="object">Baldwin\ImageCleanup\Console\Command\RemoveCorruptResizedFiles</item>
                 <item name="baldwin_imagecleanup_console_command_removeobsoletedatabaseentries" xsi:type="object">Baldwin\ImageCleanup\Console\Command\RemoveObsoleteDatabaseEntries</item>
                 <item name="baldwin_imagecleanup_console_command_removeunusedcachehashdirectories" xsi:type="object">Baldwin\ImageCleanup\Console\Command\RemoveUnusedCacheHashDirectories</item>
                 <item name="baldwin_imagecleanup_console_command_removeunusedimagefiles" xsi:type="object">Baldwin\ImageCleanup\Console\Command\RemoveUnusedImageFiles</item>
