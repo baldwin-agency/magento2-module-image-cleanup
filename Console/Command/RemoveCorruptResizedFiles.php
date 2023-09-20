@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Baldwin\ImageCleanup\Console\Command;
 
+use Baldwin\ImageCleanup\Console\ProgressIndicator;
 use Baldwin\ImageCleanup\Console\UserInteraction;
 use Baldwin\ImageCleanup\Deleter\MediaDeleter;
 use Baldwin\ImageCleanup\Finder\CorruptResizedFilesFinder;
@@ -16,15 +17,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RemoveCorruptResizedFiles extends ConsoleCommand
 {
     private $userInteraction;
+    private $progressIndicator;
     private $mediaDeleter;
     private $corruptResizedFilesFinder;
 
     public function __construct(
         UserInteraction $userInteraction,
+        ProgressIndicator $progressIndicator,
         MediaDeleter $mediaDeleter,
         CorruptResizedFilesFinder $corruptResizedFilesFinder
     ) {
         $this->userInteraction = $userInteraction;
+        $this->progressIndicator = $progressIndicator;
         $this->mediaDeleter = $mediaDeleter;
         $this->corruptResizedFilesFinder = $corruptResizedFilesFinder;
 
@@ -51,6 +55,8 @@ class RemoveCorruptResizedFiles extends ConsoleCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->progressIndicator->init($output);
+
         $files = $this->corruptResizedFilesFinder->find();
 
         $accepted = $this->userInteraction->showPathsToDeleteAndAskForConfirmation($files, $input, $output);

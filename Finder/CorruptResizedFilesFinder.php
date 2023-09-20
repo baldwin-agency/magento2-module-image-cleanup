@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Baldwin\ImageCleanup\Finder;
 
+use Baldwin\ImageCleanup\Console\ProgressIndicator;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface;
 
 class CorruptResizedFilesFinder
 {
+    private $progressIndicator;
     private $filesystem;
 
     public function __construct(
+        ProgressIndicator $progressIndicator,
         Filesystem $filesystem
     ) {
+        $this->progressIndicator = $progressIndicator;
         $this->filesystem = $filesystem;
     }
 
@@ -23,7 +27,11 @@ class CorruptResizedFilesFinder
      */
     public function find(): array
     {
+        $this->progressIndicator->start('Searching for corrupt files');
+
         $corruptFiles = $this->getCorruptFilesOnDisk();
+
+        $this->progressIndicator->stop();
 
         return $corruptFiles;
     }
@@ -37,6 +45,7 @@ class CorruptResizedFilesFinder
 
         $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
         $resizedImageDirectories = $this->getResizedImageDirectories($mediaDirectory);
+        $this->progressIndicator->setMax(count($resizedImageDirectories));
 
         foreach ($resizedImageDirectories as $resizedImageDir) {
             $fileIterator = new \RecursiveIteratorIterator(
@@ -52,6 +61,8 @@ class CorruptResizedFilesFinder
                     $corruptFiles[] = $file->getRealPath();
                 }
             }
+
+            $this->progressIndicator->advance();
         }
 
         return $corruptFiles;
