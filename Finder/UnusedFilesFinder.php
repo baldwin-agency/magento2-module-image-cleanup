@@ -212,6 +212,7 @@ class UnusedFilesFinder
 
             foreach ($alternativeExtensions as $ext) {
                 $extraFiles[] = $fileWithoutExtension . '.' . $ext;
+                $extraFiles[] = $filename . '.' . $ext;
             }
         });
 

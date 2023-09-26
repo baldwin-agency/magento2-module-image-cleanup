@@ -77,7 +77,7 @@ If you don't run these in this order, it might mean you'll need to run some of t
 There is a configuration section in the backoffice under: Stores > Configuration > Catalog > Catalog > Product Image Cleanup Settings
 
 - **List of dynamically generated image file extensions**: Some Magento shops might have modules installed to dynamically generate `webp` or `avif` image files out of the original product image files. These files are usually not referenced in the database of Magento so by specifying those file extensions in the configuration, we can prevent them from being deleted accidentally. The module will still be able to remove those type of files when the original file is no longer referenced in the database.  
-This feature only works properly when the dynamically generated image files use the same filename as the original file, so they can only be different in the file extension being used.
+This feature only works properly when the dynamically generated image files use the same filename as the original file, so they can only be different in the file extension being used (either replaced or appended).
 
 ## Documentation about resized/cached directories
 
