@@ -24,7 +24,7 @@ This module gives you some options to delete those lingering unused images from 
 ## Compatibility
 
 - This module should work with Magento 2.3.4 or higher
-- The module should be compatible with PHP 7.3, 7.4, 8.1 and 8.2
+- The module should be compatible with PHP 7.3, 7.4, 8.1, 8.2 and 8.3
 
 ## Installation
 
