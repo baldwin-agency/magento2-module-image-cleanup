@@ -90,7 +90,7 @@ class UnusedCacheHashDirectoriesFinder
 
         foreach ($this->getViewImages($this->getThemesInUse()) as $imageParams) {
             // Copied first few lines from Magento\MediaStorage\Service\ImageResize::resize
-            // - this hasn't been changed between Magento 2.3.4 and 2.4.5
+            // - this hasn't been changed between Magento 2.3.4 and 2.4.7
             // - there were some small changes introduced in 2.4.0, but those won't affect the result over here
             unset($imageParams['id']);
             $imageAsset = $this->assetImageFactory->create(
@@ -123,7 +123,7 @@ class UnusedCacheHashDirectoriesFinder
     }
 
     /**
-     * Copied from Magento\MediaStorage\Service\ImageResize - this hasn't been changed between Magento 2.3.4 and 2.4.5
+     * Copied from Magento\MediaStorage\Service\ImageResize - this hasn't been changed between Magento 2.3.4 and 2.4.7
      *
      * @param array<Theme> $themes
      *
@@ -156,7 +156,7 @@ class UnusedCacheHashDirectoriesFinder
     }
 
     /**
-     * Copied from Magento\MediaStorage\Service\ImageResize - this hasn't been changed between Magento 2.3.0 and 2.4.5
+     * Copied from Magento\MediaStorage\Service\ImageResize - this hasn't been changed between Magento 2.3.0 and 2.4.7
      *
      * @param array<string, mixed> $imageData
      */
@@ -170,7 +170,7 @@ class UnusedCacheHashDirectoriesFinder
     }
 
     /**
-     * Copied from Magento\MediaStorage\Service\ImageResize - this hasn't been changed between Magento 2.3.0 and 2.4.5
+     * Copied from Magento\MediaStorage\Service\ImageResize - this hasn't been changed between Magento 2.3.0 and 2.4.7
      *
      * @return array<Theme>
      */
