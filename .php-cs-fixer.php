@@ -19,6 +19,7 @@ return $config
         'phpdoc_align'                                     => ['align' => 'vertical'],
         'phpdoc_separation'                                => ['skip_unlisted_annotations' => true],
         'self_accessor'                                    => true,
+        'trailing_comma_in_multiline'                      => ['after_heredoc' => true, 'elements' => ['arrays']], // remove this line when we drop support for PHP < 8.0
     ])
     ->setFinder($finder)
 ;
