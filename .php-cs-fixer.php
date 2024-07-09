@@ -1,13 +1,18 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()
+use PhpCsFixer\Finder as PhpCsFixerFinder;
+use PhpCsFixer\Config as PhpCsFixerConfig;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
+
+$finder = PhpCsFixerFinder::create()
     ->in(__DIR__)
     ->exclude('vendor')
     ->exclude('vendor-bin')
 ;
 
-$config = new PhpCsFixer\Config();
+$config = new PhpCsFixerConfig();
 return $config
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setRules([
         '@PER-CS'                                          => true,
         'binary_operator_spaces'                           => ['default' => 'at_least_single_space', 'operators' => ['=>' => 'align']],
