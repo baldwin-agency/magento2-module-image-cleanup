@@ -77,11 +77,14 @@ class CorruptResizedFilesFinder
         // so the ones starting with a single letter in their directory name
         $resizedImageDirectories = [];
 
-        /** @var array<string> */
-        $hashDirectories = $mediaDirectory->read('catalog/product/cache');
-        foreach ($hashDirectories as $hashDir) {
-            if ($mediaDirectory->isDirectory($hashDir)) {
-                $resizedImageDirectories[] = $mediaDirectory->read($hashDir);
+        $cacheDir = 'catalog/product/cache';
+        if ($mediaDirectory->isExist($cacheDir)) {
+            /** @var array<string> */
+            $hashDirectories = $mediaDirectory->read($cacheDir);
+            foreach ($hashDirectories as $hashDir) {
+                if ($mediaDirectory->isDirectory($hashDir)) {
+                    $resizedImageDirectories[] = $mediaDirectory->read($hashDir);
+                }
             }
         }
         $resizedImageDirectories = array_merge([], ...$resizedImageDirectories);
