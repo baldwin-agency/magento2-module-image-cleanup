@@ -147,11 +147,14 @@ class UnusedFilesFinder
         // so the ones starting with a single letter in their directory name
         $subHashDirectories = [];
 
-        /** @var array<string> */
-        $hashDirectories = $mediaDirectory->read('catalog/product/cache');
-        foreach ($hashDirectories as $hashDir) {
-            if ($mediaDirectory->isDirectory($hashDir)) {
-                $subHashDirectories[] = $mediaDirectory->read($hashDir);
+        $cacheDir = 'catalog/product/cache';
+        if ($mediaDirectory->isExist($cacheDir)) {
+            /** @var array<string> */
+            $hashDirectories = $mediaDirectory->read($cacheDir);
+            foreach ($hashDirectories as $hashDir) {
+                if ($mediaDirectory->isDirectory($hashDir)) {
+                    $subHashDirectories[] = $mediaDirectory->read($hashDir);
+                }
             }
         }
 

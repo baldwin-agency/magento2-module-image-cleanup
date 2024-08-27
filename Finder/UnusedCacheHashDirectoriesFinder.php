@@ -58,7 +58,11 @@ class UnusedCacheHashDirectoriesFinder
     {
         $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
 
-        $allDirectories = $mediaDirectory->read('catalog/product/cache');
+        $cacheDir = 'catalog/product/cache';
+        $allDirectories = [];
+        if ($mediaDirectory->isExist($cacheDir)) {
+            $allDirectories = $mediaDirectory->read($cacheDir);
+        }
         $usedDirectories = $this->getUsedCacheHashDirectories($mediaDirectory);
 
         /** @var array<string> */
