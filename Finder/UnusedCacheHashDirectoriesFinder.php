@@ -121,6 +121,9 @@ class UnusedCacheHashDirectoriesFinder
             $directories[] = $directory;
         }
 
+        // TODO: also fetch the ImageIndex from the database for which the timestamp is less then 24 hours ago or something like that
+        // insert them in this string: catalog/product/cache/%s/, then merge them with the directories and make them unique
+
         $directories = array_unique($directories);
 
         return $directories;
