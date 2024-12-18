@@ -20,6 +20,7 @@ checkquality:
 	vendor-bin/phpstan/vendor/bin/phpstan analyse
 
 	xmllint --noout                                                                etc/di.xml
+	xmllint --noout                                                                etc/frontend/di.xml
 	xmllint --noout --schema vendor/magento/framework/Module/etc/module.xsd        etc/module.xml
 	xmllint --noout --schema vendor/magento/module-config/etc/system_file.xsd      etc/adminhtml/system.xml
 	xmllint --noout --schema vendor/magento/module-store/etc/config.xsd            etc/config.xml

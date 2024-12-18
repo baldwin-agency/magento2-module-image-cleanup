@@ -31,8 +31,4 @@
             <argument name="logger" xsi:type="object">Baldwin\ImageCleanup\Log\Logger</argument>
         </arguments>
     </type>
-
-    <type name="Magento\Catalog\Model\Product\Image\ParamsBuilder">
-        <plugin name="baldwin_imagecleanup_service_storeimageindexes" type="Baldwin\ImageCleanup\Service\StoreImageIndexes"/>
-    </type>
 </config>
