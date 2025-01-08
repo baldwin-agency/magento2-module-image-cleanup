@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Baldwin\ImageCleanup\Service;
 
 use Magento\Catalog\Model\Product\Image\ParamsBuilder as ProductImageParamsBuilder;
+use Magento\Catalog\Model\View\Asset\Image as CatalogImageAsset;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Psr\Log\LoggerInterface;
@@ -43,6 +44,17 @@ class StoreImageIndexes
     {
         $imageIndex = $this->getUniqueImageIndex($result);
         $this->addImageIndexToCache($imageIndex, $result);
+
+        return $result;
+    }
+
+    public function afterGetUrl(CatalogImageAsset $subject, string $result): string
+    {
+        $matches = [];
+        if (preg_match('#/catalog/product/cache/([a-f0-9]{32})/#', $result, $matches) === 1) {
+            $imageIndex = $matches[1];
+            $this->addImageIndexToCache($imageIndex, $subject->getImageTransformationParameters());
+        }
 
         return $result;
     }
@@ -86,6 +98,7 @@ class StoreImageIndexes
             $this->cache->save($this->jsonSerializer->serialize($this->cachedImageIndexes), self::CACHE_IDENTIFIER, [], self::CACHE_LIFETIME);
 
             $this->logger->critical('*** save ***');
+            $this->logger->critical($imageIndex);
             $this->logger->critical(print_r($this->cachedImageIndexes, true));
             $imageParams = json_encode(array_filter($imageParams));
             if ($imageParams !== false) {
@@ -95,7 +108,12 @@ class StoreImageIndexes
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             foreach ($backtrace as $item) {
                 if (array_key_exists('file', $item) && str_ends_with($item['file'], '.phtml')) {
-                    $this->logger->critical($item['file']);
+                    $sourceFile = $item['file'];
+                    if (array_key_exists('line', $item)) {
+                        $sourceFile .= ':' . $item['line'];
+                    }
+
+                    $this->logger->critical($sourceFile);
                     break;
                 }
             }
@@ -105,7 +123,7 @@ class StoreImageIndexes
             // - imageIndex
             // - timestamp last seen
             // - imageParams that generated it (can be useful to figure out where a certain imageIndex came from)
-            // - phtml file that used the imageIndex (can be useful to figure out where a certain imageIndex came from) - can other files pull one in? Maybe html files? Any others?
+            // - source file that used the imageIndex (can be useful to figure out where a certain imageIndex came from) - can other files besides phtml pull one in? Maybe html files? Any others?
 
             // then, using a random number - as not do it every single time - also cleanup all records from that database table that are older than 24 hours for example (as sort of garbage collector)
         }
