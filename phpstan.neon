@@ -8,6 +8,8 @@ parameters:
     excludePaths:
         - vendor/*
         - vendor-bin/*
+    scanFiles:
+        - stubs/HyvaThemeFallbackConfig.stub
     ignoreErrors:
         -
             message: "#^Casting to int something that's already int\\.$#"

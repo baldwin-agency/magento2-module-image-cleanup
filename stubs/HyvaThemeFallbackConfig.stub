@@ -1,0 +1,15 @@
+<?php
+
+namespace Hyva\ThemeFallback\Config;
+
+class ThemeFallback
+{
+    public function isEnabled(): bool;
+
+    public function getThemeFullPath(): string;
+
+    /**
+     * @return array<string>
+     */
+    public function getListPartOfUrl(): array;
+}
