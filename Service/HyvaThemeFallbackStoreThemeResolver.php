@@ -15,6 +15,8 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
 {
     private $appEmulation;
     private $themeProvider;
+
+    /** @var ?HyvaThemeFallbackConfig */
     private $hyvaThemeFallbackConfig = null;
 
     public function __construct(
@@ -44,12 +46,15 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
         $themeId = null;
         $hyvaThemeFallbackConfig = $this->getHyvaThemeFallbackConfig();
 
-        // need to emulate frontend storeview, because we can't pass on the incoming store param to the calls to hyvaThemeFallbackConfig unfortunately
+        // need to emulate frontend storeview
+        // because we can't pass on the incoming store param to the calls to hyvaThemeFallbackConfig unfortunately
         $this->appEmulation->startEnvironmentEmulation($store->getId());
 
         if ($hyvaThemeFallbackConfig->isEnabled()) {
             $fallbackThemePath = $hyvaThemeFallbackConfig->getThemeFullPath();
             $fallbackTheme = $this->themeProvider->getThemeByFullPath($fallbackThemePath);
+
+            /** @var null|int|string $fallbackThemeId */
             $fallbackThemeId = $fallbackTheme->getId();
 
             if ($fallbackThemeId !== null && is_numeric($fallbackThemeId)) {
@@ -68,7 +73,10 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
     private function getHyvaThemeFallbackConfig(): HyvaThemeFallbackConfig
     {
         if ($this->hyvaThemeFallbackConfig === null) {
-            $this->hyvaThemeFallbackConfig = ObjectManager::getInstance()->get(HyvaThemeFallbackConfig::class);
+            /** @var HyvaThemeFallbackConfig $hyvaThemeFallbackConfig */
+            $hyvaThemeFallbackConfig = ObjectManager::getInstance()->get(HyvaThemeFallbackConfig::class);
+
+            $this->hyvaThemeFallbackConfig = $hyvaThemeFallbackConfig;
         }
 
         return $this->hyvaThemeFallbackConfig;
