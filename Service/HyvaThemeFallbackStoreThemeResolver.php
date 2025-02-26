@@ -54,7 +54,6 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
             $fallbackThemePath = $hyvaThemeFallbackConfig->getThemeFullPath();
             $fallbackTheme = $this->themeProvider->getThemeByFullPath($fallbackThemePath);
 
-            /** @var null|int|string $fallbackThemeId */
             $fallbackThemeId = $fallbackTheme->getId();
 
             if ($fallbackThemeId !== null && is_numeric($fallbackThemeId)) {

@@ -31,8 +31,8 @@ class ConfigReader
             return [];
         }
 
-        // array_filter is to remove values that are considered 'empty'
-        $extensions = array_filter(explode(',', trim($extensions)));
+        // array_diff is to remove empty strings from the array
+        $extensions = array_diff(explode(',', trim($extensions)), ['']);
 
         // remove spaces and dots in case somebody did add those
         $extensions = array_map(function (string $ext) {
