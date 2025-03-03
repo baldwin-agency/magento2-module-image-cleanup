@@ -3,6 +3,7 @@ parameters:
     inferPrivatePropertyTypeFromConstructor: true
     checkDynamicProperties: true
     checkImplicitMixed: false # TODO: change to true if we feel like we need another challenge
+    treatPhpDocTypesAsCertain: false
     paths:
         - .
     excludePaths:
@@ -11,11 +12,6 @@ parameters:
     scanFiles:
         - stubs/HyvaThemeFallbackConfig.stub
     ignoreErrors:
-        -
-            message: "#^Casting to int something that's already int\\.$#"
-            count: 1
-            path: Finder/UnusedCacheHashDirectoriesFinder.php
-
         -
             message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
             count: 1
