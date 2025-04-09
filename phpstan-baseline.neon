@@ -1,0 +1,19 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Finder/UnusedCacheHashDirectoriesFinder.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: Finder/UnusedCacheHashDirectoriesFinder.php
+
+		-
+			message: '#^Variable method call on Magento\\Theme\\Model\\Theme\.$#'
+			identifier: method.dynamicName
+			count: 1
+			path: Finder/UnusedCacheHashDirectoriesFinder.php
