@@ -11,6 +11,14 @@
         </arguments>
     </type>
 
+    <type name="Magento\Theme\Model\Theme\StoreThemesResolver">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="baldwin_imagecleanup_service_hyvathemefallbackstorethemeresolver" xsi:type="object">Baldwin\ImageCleanup\Service\HyvaThemeFallbackStoreThemeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+
     <virtualType name="Baldwin\ImageCleanup\Log\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
             <argument name="fileName" xsi:type="string">/var/log/baldwin-imagecleanup.log</argument>
