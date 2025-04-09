@@ -1,3 +1,6 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: max
     inferPrivatePropertyTypeFromConstructor: true
@@ -11,13 +14,3 @@ parameters:
         - vendor-bin/*
     scanFiles:
         - stubs/HyvaThemeFallbackConfig.stub
-    ignoreErrors:
-        -
-            message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
-            count: 1
-            path: Finder/UnusedCacheHashDirectoriesFinder.php
-
-        -
-            message: "#^Variable method call on Magento\\\\Theme\\\\Model\\\\Theme\\.$#"
-            count: 1
-            path: Finder/UnusedCacheHashDirectoriesFinder.php
