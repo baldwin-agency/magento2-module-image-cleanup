@@ -16,6 +16,9 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
     private $appEmulation;
     private $themeProvider;
 
+    /** @var bool */
+    private $isActive = false;
+
     /** @var ?HyvaThemeFallbackConfig */
     private $hyvaThemeFallbackConfig = null;
 
@@ -27,11 +30,16 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
         $this->appEmulation = $appEmulation;
     }
 
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+
     public function getThemes(StoreInterface $store): array
     {
         $themeIds = [];
 
-        if (class_exists(HyvaThemeFallbackConfig::class)) {
+        if ($this->isActive && class_exists(HyvaThemeFallbackConfig::class)) {
             $hyvaFallbackThemeId = $this->getHyvaFallbackThemeId($store);
             if ($hyvaFallbackThemeId !== null) {
                 $themeIds[] = $hyvaFallbackThemeId;
