@@ -7,6 +7,7 @@ namespace Baldwin\ImageCleanup\Console\Command;
 use Baldwin\ImageCleanup\Console\UserInteraction;
 use Baldwin\ImageCleanup\Deleter\MediaDeleter;
 use Baldwin\ImageCleanup\Finder\UnusedCacheHashDirectoriesFinder;
+use Baldwin\ImageCleanup\Service\HyvaThemeFallbackStoreThemeResolver;
 use Magento\Framework\App\Area as AppArea;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Console\Cli;
@@ -21,17 +22,20 @@ class RemoveUnusedCacheHashDirectories extends ConsoleCommand
     private $userInteraction;
     private $mediaDeleter;
     private $unusedCacheHashDirFinder;
+    private $hyvaThemeFallbackStoreThemeResolver;
 
     public function __construct(
         AppState $appState,
         UserInteraction $userInteraction,
         MediaDeleter $mediaDeleter,
-        UnusedCacheHashDirectoriesFinder $unusedCacheHashDirFinder
+        UnusedCacheHashDirectoriesFinder $unusedCacheHashDirFinder,
+        HyvaThemeFallbackStoreThemeResolver $hyvaThemeFallbackStoreThemeResolver
     ) {
         $this->appState = $appState;
         $this->userInteraction = $userInteraction;
         $this->mediaDeleter = $mediaDeleter;
         $this->unusedCacheHashDirFinder = $unusedCacheHashDirFinder;
+        $this->hyvaThemeFallbackStoreThemeResolver = $hyvaThemeFallbackStoreThemeResolver;
 
         parent::__construct();
     }
@@ -61,7 +65,11 @@ class RemoveUnusedCacheHashDirectories extends ConsoleCommand
         // mimicking same area as core magento (global) from the catalog:images:resize command
         $this->appState->setAreaCode(AppArea::AREA_GLOBAL);
 
+        $this->hyvaThemeFallbackStoreThemeResolver->setIsActive(true);
+
         $directories = $this->unusedCacheHashDirFinder->find();
+
+        $this->hyvaThemeFallbackStoreThemeResolver->setIsActive(false);
 
         $accepted = $this->userInteraction->showPathsToDeleteAndAskForConfirmation($directories, $input, $output);
         if ($accepted) {
