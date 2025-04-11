@@ -10,21 +10,25 @@ use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\App\Emulation as AppEmulation;
 use Magento\Theme\Model\Theme\StoreThemesResolverInterface;
+use Magento\Framework\App\State;
 
 class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterface
 {
     private $appEmulation;
     private $themeProvider;
+    private $state;
 
     /** @var ?HyvaThemeFallbackConfig */
     private $hyvaThemeFallbackConfig = null;
 
     public function __construct(
         AppEmulation $appEmulation,
-        ThemeProviderInterface $themeProvider
+        ThemeProviderInterface $themeProvider,
+        State $state
     ) {
         $this->themeProvider = $themeProvider;
         $this->appEmulation = $appEmulation;
+        $this->state = $state;
     }
 
     public function getThemes(StoreInterface $store): array
@@ -48,6 +52,7 @@ class HyvaThemeFallbackStoreThemeResolver implements StoreThemesResolverInterfac
 
         // need to emulate frontend storeview
         // because we can't pass on the incoming store param to the calls to hyvaThemeFallbackConfig unfortunately
+        $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
         $this->appEmulation->startEnvironmentEmulation($store->getId());
 
         if ($hyvaThemeFallbackConfig->isEnabled()) {
