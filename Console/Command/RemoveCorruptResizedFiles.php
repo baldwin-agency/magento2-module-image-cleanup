@@ -39,15 +39,15 @@ class RemoveCorruptResizedFiles extends ConsoleCommand
     {
         $this->setName('catalog:images:remove-corrupt-resized-files');
         $this->setDescription(
-            'Remove corrupt resized image files from the filesystem. ' .
-            'Magento will re-generate them again afterwards'
+            'Remove corrupt resized image files from the filesystem. '
+            . 'Magento will re-generate them again afterwards'
         );
         $this->addOption(
             UserInteraction::CONSOLE_OPTION_TO_SKIP_GENERATING_STATS,
             null,
             InputOption::VALUE_NONE,
-            'Skip calculating and outputting stats (filesizes, number of files, ...), ' .
-            'this can speed up the command in case it runs slowly.'
+            'Skip calculating and outputting stats (filesizes, number of files, ...), '
+            . 'this can speed up the command in case it runs slowly.'
         );
 
         parent::configure();

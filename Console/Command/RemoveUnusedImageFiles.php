@@ -39,15 +39,15 @@ class RemoveUnusedImageFiles extends ConsoleCommand
     {
         $this->setName('catalog:images:remove-unused-files');
         $this->setDescription(
-            'Remove unused product image files from the filesystem. ' .
-            'We compare the data that\'s in the database with the files on disk and remove the ones that don\'t match'
+            'Remove unused product image files from the filesystem. '
+            . 'We compare the data that\'s in the database with the files on disk and remove the ones that don\'t match'
         );
         $this->addOption(
             UserInteraction::CONSOLE_OPTION_TO_SKIP_GENERATING_STATS,
             null,
             InputOption::VALUE_NONE,
-            'Skip calculating and outputting stats (filesizes, number of files, ...), ' .
-            'this can speed up the command in case it runs slowly.'
+            'Skip calculating and outputting stats (filesizes, number of files, ...), '
+            . 'this can speed up the command in case it runs slowly.'
         );
 
         parent::configure();
