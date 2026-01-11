@@ -59,7 +59,7 @@ class RemoveUnusedCacheHashDirectories extends ConsoleCommand
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // needed to avoid 'Area code is not set'
         // mimicking same area as core magento (global) from the catalog:images:resize command
