@@ -44,7 +44,7 @@ class RemoveObsoleteDatabaseEntries extends ConsoleCommand
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $entries = $this->obsoleteDbEntriesFinder->find();
 

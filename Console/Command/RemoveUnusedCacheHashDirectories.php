@@ -44,22 +44,22 @@ class RemoveUnusedCacheHashDirectories extends ConsoleCommand
     {
         $this->setName('catalog:images:remove-unused-hash-directories');
         $this->setDescription(
-            'Remove unused resized hash directories (like: pub/media/catalog/product/cache/xxyyzz). ' .
-            'These directories can be a leftover from older Magento versions, or from image definitions that got ' .
-            'removed from the etc/view.xml file of a custom theme for example.'
+            'Remove unused resized hash directories (like: pub/media/catalog/product/cache/xxyyzz). '
+            . 'These directories can be a leftover from older Magento versions, or from image definitions that got '
+            . 'removed from the etc/view.xml file of a custom theme for example.'
         );
         $this->addOption(
             UserInteraction::CONSOLE_OPTION_TO_SKIP_GENERATING_STATS,
             null,
             InputOption::VALUE_NONE,
-            'Skip calculating and outputting stats (filesizes, number of files, ...), ' .
-            'this can speed up the command in case it runs slowly.'
+            'Skip calculating and outputting stats (filesizes, number of files, ...), '
+            . 'this can speed up the command in case it runs slowly.'
         );
 
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // needed to avoid 'Area code is not set'
         // mimicking same area as core magento (global) from the catalog:images:resize command
